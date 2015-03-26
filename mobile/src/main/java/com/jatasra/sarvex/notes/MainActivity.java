@@ -9,7 +9,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.jatasra.sarvex.notes.data.NoteDataSource;
+import com.jatasra.sarvex.notes.data.NoteItem;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.List;
+
 public class MainActivity extends ActionBarActivity {
+
+    private static final Logger log = LoggerFactory.getLogger(MainActivity.class);
+    private NoteDataSource dataSource;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -19,10 +30,56 @@ public class MainActivity extends ActionBarActivity {
 			getSupportFragmentManager().beginTransaction()
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}
-	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
+        dataSource = new NoteDataSource(this);
+        List<NoteItem> notes = dataSource.findAll();
+        NoteItem note = notes.get(0);
+        note.setText("Updated");
+        dataSource.update(note);
+
+        notes = dataSource.findAll();
+        note = notes.get(0);
+
+        log.info(note.getKey() + ": " + note.getText());
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.menu_main, menu);
 		return true;
