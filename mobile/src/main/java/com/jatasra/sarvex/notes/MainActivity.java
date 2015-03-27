@@ -1,13 +1,10 @@
 package com.jatasra.sarvex.notes;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 
 import com.jatasra.sarvex.notes.data.NoteDataSource;
 import com.jatasra.sarvex.notes.data.NoteItem;
@@ -21,26 +18,27 @@ public class MainActivity extends ActionBarActivity {
 
     private static final Logger log = LoggerFactory.getLogger(MainActivity.class);
     private NoteDataSource dataSource;
+    List<NoteItem> notes;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		if (savedInstanceState == null) {
-			getSupportFragmentManager().beginTransaction()
-					.add(R.id.container, new PlaceholderFragment()).commit();
+			getFragmentManager().beginTransaction()
+					.add(R.id.container, new NoteFragment()).commit();
 		}
 
         dataSource = new NoteDataSource(this);
-        List<NoteItem> notes = dataSource.findAll();
-        NoteItem note = notes.get(0);
-        note.setText("Updated");
-        dataSource.update(note);
 
+        refreshDisplay();
+    }
+
+    private void refreshDisplay() {
         notes = dataSource.findAll();
-        note = notes.get(0);
 
-        log.info(note.getKey() + ": " + note.getText());
+        ArrayAdapter<NoteItem> adapter
+                = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, notes);
     }
 
     @Override
@@ -98,22 +96,5 @@ public class MainActivity extends ActionBarActivity {
 		}
 
 		return super.onOptionsItemSelected(item);
-	}
-
-	/**
-	 * A placeholder fragment containing a simple view.
-	 */
-	public static class PlaceholderFragment extends Fragment {
-
-		public PlaceholderFragment() {
-		}
-
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-				Bundle savedInstanceState) {
-			View rootView = inflater.inflate(R.layout.fragment_main, container,
-					false);
-			return rootView;
-		}
 	}
 }
